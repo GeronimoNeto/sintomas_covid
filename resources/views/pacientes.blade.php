@@ -12,18 +12,23 @@
     <div class="pacientes"><br>
         <div class="col-3">
             <h2>Registrar Paciente</h2>
-            <form action="" method="get">
+            <form action="/painel/pacientes" method="POST" id="salvarPaciente" enctype="multipart/form-data">
+                @csrf
                 <div>
-                    <input type="text" placeholder="Nome Completo" class="form-control">
-                    
-                        <i style="margin-left:3px;">CPF</i>
-                        <input type="text" placeholder="000.000.000-00" class="form-control" id="inputCPF">
-                    
+                    <i style="margin-left:3px;">Nome Completo</i>
+                    <input type="text" placeholder="" name="nome" class="form-control" required>
+                    <i style="margin-left:3px;">CPF</i>
+                    <input type="text" placeholder="000.000.000-00" class="form-control" name="cpf" id="inputCPF" pattern="[0-9.-]+$" required>
                     <div>
                         <i style="margin-left:3px;">Contato</i>
-                        <input type="text" placeholder="(00)90000-0000" class="form-control">
+                        <input type="text" placeholder="(00)90000-0000" name="wpp" class="form-control" id="inputWPP" pattern="[0-9-()]+$" required>
                     </div>
-                    <input type="date" class="form-control" id="inputDate">
+                    <i style="margin-left:3px;">Data de Nascimento</i>
+                    <input type="date" class="form-control" name="nasc" id="inputDate" required>
+                    <div class="mb-3">
+                        <i for="formFile" class="form-label">Foto do Paciente (opcional)</i>
+                        <input class="form-control" type="file" name="foto" id="formFile">
+                    </div>
                 </div>
                 <input type="submit" class="btn btn-primary">
             </form>
@@ -53,7 +58,7 @@
                     @endphp
                     @foreach($pacientes as $paciente)
                     <tr>
-                        <th><img src="/img/{{$paciente->foto}}" width="70"></th>
+                        <th><a href="/img/pacientes/{{$paciente->foto}}"><img style="background-image:url(/img/pacientes/{{$paciente->foto}})" class="imagemPaciente"></a></th>
                         @php
                             $ano = intval(substr($paciente->nasc,0,4));
                             $mes = intval(substr($paciente->nasc,5,2));
@@ -79,14 +84,14 @@
                         <th>{{formatCPF($paciente->cpf)}}</th>
                         <th>{{$wpp}}</th>
                         <th>
-                            <button class="btn btn-success w-100">Atender</button>
-                            <button class="btn btn-warning w-100">Editar</button>
-                            <button class="btn btn-danger w-100">Remover</button>
+                            <a href="/painel/pacientes/atender/{{$paciente->id}}"><button type="submit" class="btn btn-success w-100" name="atender">Atender</button></a>
+                            <a href="/painel/pacientes/editar/{{$paciente->id}}"><button type="submit" class="btn btn-warning w-100" name="atender">Editar</button></a>
+                            <a href="/painel/pacientes/remover/{{$paciente->id}}"><button type="submit" class="btn btn-danger w-100" name="atender">Remover</button></a>
                         </th>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-            </div>
+        </div>
     </div>
 @endsection

@@ -2,10 +2,6 @@
 @section('title','Login')
 
 @section('content')
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        You should check in on some of those fields below.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
     <div class="modal modal-signin position-static d-block bg-secondary py-5" tabindex="-1" role="dialog" id="modalSignin"  style="background-color:transparent !important;">
         <div class="modal-dialog" role="document">
             <div class="modal-content rounded-4 shadow">

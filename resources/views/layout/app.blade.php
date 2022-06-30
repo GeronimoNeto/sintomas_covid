@@ -16,6 +16,17 @@
     <script src="/js/script.js"></script>
 </head>
 <body>
+    @if(session('alert'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="meuAlerta">
+        Paciente Registrado com Sucesso!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @elseif(session('alert2'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="meuAlerta">
+        Formato de Imagem Não Permitido!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
     @yield('content')
     <footer>
     </footer>

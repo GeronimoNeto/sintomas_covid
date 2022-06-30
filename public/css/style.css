@@ -7,6 +7,7 @@
     justify-content: space-between;
     margin-top:5px;
     padding: 30px;
+    height: 500px;
 }.pacientes form{
     display: flex;
     flex-direction: column;
@@ -20,4 +21,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+}.imagemPaciente{
+    width: 80px;
+    height: 80px;
+    border: 0px solid black;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: transparent;
+    cursor: pointer;
 }
