@@ -1,0 +1,23 @@
+*{
+    font-family: Arial;
+}
+.pacientes{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top:5px;
+    padding: 30px;
+}.pacientes form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    margin-right: 30px;
+}.pacientes form div:first-child{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
