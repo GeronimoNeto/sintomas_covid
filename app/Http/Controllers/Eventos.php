@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pacientes;
+use App\Models\Atendimentos;
+
 use \LaravelLegends\PtBrValidator\Rules\FormatoCpf;
 
 class Eventos extends Controller
@@ -51,6 +53,27 @@ class Eventos extends Controller
 
         $event->save();
         return redirect('/painel/pacientes')->with('alert','Paciente Registrado!');
+    }
+    public function atender($id){
+        //echo $id;
+
+        $event = Pacientes::findOrFail($id);
+        return view('atender',["event" => $event]);
+    }
+    public function concluir(Request $r,$id){
+        //echo $id;
+
+        $event = new Atendimentos;
+
+        $event->sintomas = $r->sintomas;
+        $event->lista = "$r->lista";
+        $event->resultado = $r->resultado;
+        $event->idPaciente = $r->idPaciente;
+
+        $event->save();
+
+        return redirect('/painel/pacientes')->with('alert3','Paciente Atendido!');
 
     }
+
 }

@@ -43,16 +43,17 @@ $(document).ready(()=>{
     });
 
     //Data maxima no input date
-    inputDate = document.getElementById("inputDate")
-    inputDate.min="1900-01-01"
-    const date = new Date();
-    if((date.getMonth()+1)>10){
-        mes = date.getMonth()+1
-    }else{
-        mes = "0"+(date.getMonth()+1)
+    if(document.getElementById("inputDate")){
+        inputDate = document.getElementById("inputDate")
+        inputDate.min="1900-01-01"
+        const date = new Date();
+        if((date.getMonth()+1)>10){
+            mes = date.getMonth()+1
+        }else{
+            mes = "0"+(date.getMonth()+1)
+        }
+        inputDate.max=(date.getFullYear()-1)+"-"+mes+"-"+date.getDate();
     }
-    inputDate.max=(date.getFullYear()-1)+"-"+mes+"-"+date.getDate();
-
     //Formatar o CPF no Input
     $("#inputCPF").keydown((k)=>{
         key = window.event.keyCode
@@ -90,5 +91,68 @@ $(document).ready(()=>{
     $("#meuAlerta button").click(()=>{ //Cliar no botão para fechar
         $("#meuAlerta").hide();
     })
+
+
+    //Imprimir os checkbox com os sintomas
+    listaSintomas = [
+        "Febre",
+        "Coriza",
+        "Nariz entupido",
+        "Cansaço",
+        "Tosse",
+        "Dor de cabeça",
+        "Dores no corpo",
+        "Mal estar geral",
+        "Dor de garganta",
+        "Dificuldade de respirar",
+        "Falta de paladar",
+        "Falta de olfato",
+        "Dificuldade de locomoção",
+        "Diarréia"
+    ]
+    resultados = [
+        "<b style='color:red'>POSSÍVEL INFECTADO</b>",
+        "<b style='color:orange'>POTENCIAL INFECTADO</b>",
+        "<b style='color:green'>SINTOMAS INSUFICIENTES</b>"
+    ]
+    let somaSintomas = 0
+    sintomasPaciente = []
+    divSintomas = $("#sintomas")
+    listaSintomas.forEach(element => {
+        let formCheck = $('<div/>',{
+            class: 'form-check'
+        }).appendTo(divSintomas);
+        let formCheckInput = $('<input/>',{
+            class: 'form-check-input',
+            type: 'checkbox',
+            value: 1
+        }).appendTo(formCheck)
+        let formCheckLabel = $('<label/>',{
+            class: 'form-check-label',
+            text: element
+        }).appendTo(formCheck)
+
+        formCheckInput.click(()=>{
+            if(formCheckInput.prop("checked")){
+                somaSintomas+=1
+                sintomasPaciente.push(element)
+            }else{
+                somaSintomas-=1
+                sintomasPaciente.splice(sintomasPaciente.indexOf(element),1)
+            }
+            if(somaSintomas>=9){
+                rr = 0
+            }else if(somaSintomas>=6 && somaSintomas<9){
+                rr = 1
+            }else if(somaSintomas<6){
+                rr = 2
+            }
+            resultadoFinal = resultados[rr]
+            $("#resultadoSintomas").html("Resultado: "+resultadoFinal)
+            $("#areaSintomas").html(sintomasPaciente+",")
+            $("#sintNum").val(somaSintomas)
+            $("#resultNum").val(rr)
+        })
+    });
 
 });

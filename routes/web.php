@@ -16,6 +16,9 @@ Route::get('/painel', function(){
 Route::get('/painel/pacientes', [Eventos::class, 'pacientes']);
 Route::post('/painel/pacientes', [Eventos::class, 'salvar']);
 
+Route::get('/painel/pacientes/atender/{id}', [Eventos::class, 'atender']);
+Route::post('/painel/pacientes/atender/{id}', [Eventos::class, 'concluir']);
+
 Route::get('/painel/atendimentos', function(){
     return view('atendimentos');
 });
