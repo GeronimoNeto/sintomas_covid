@@ -16,7 +16,7 @@
                 @csrf
                 <div>
                     <i style="margin-left:3px;">Nome Completo</i>
-                    <input type="text" placeholder="" name="nome" class="form-control" required>
+                    <input type="text" placeholder="" name="nome" id="nome" class="form-control" required>
                     <i style="margin-left:3px;">CPF</i>
                     <input type="text" placeholder="000.000.000-00" class="form-control" name="cpf" id="inputCPF" pattern="[0-9.-]+$" required>
                     <div>
@@ -30,7 +30,8 @@
                         <input class="form-control" type="file" name="foto" id="formFile">
                     </div>
                 </div>
-                <input type="submit" class="btn btn-primary">
+                <input id="signup-token" name="_token" type="hidden" value="{{csrf_token()}}">
+                <input type="submit" class="btn btn-primary" id="envipaci">
             </form>
         </div>
         <div class="col">

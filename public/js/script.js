@@ -1,19 +1,57 @@
 $(document).ready(()=>{
-    /*
-    $("#salvarPaciente").submit(()=>{
-        var info = jQuery( this ).serialize()
+    
+    $("#salvarPaciente").submit((e)=>{
+        e.preventDefault()
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        var formData = new FormData(document.getElementById("salvarPaciente"))
+        formData.append(document.getElementById("nome"))
         $.ajax({
-            url: '',
+            url: "pacientes",
+            contentType: false,
             cache: false,
-            data: info,
-            type: "GET",
+            processData: false,
+            dataType: 'json',
+            type: "POST",
+            data: formData,
             success:(msg)=>{
                 console.log("envio de formulario"+msg)
             }
         })
         return false;
-    })*/
-    
+    })
+    /*
+    $("#salvarPaciente").submit((e)=>{
+        e.preventDefault()
+        $.ajaxSetup({
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        var cNome = $("#nome").val()
+        var cCpf = $("#cpf").val()
+        var cWpp = $("#wpp").val()
+        var cNasc = $("#nasc").val()
+        $.ajax({
+            url: "{{ route('pacientes.cadastrar') }}",
+            type: "post",
+            data: {
+                _token: $("#_token").val(),
+                nome:cNome,
+                cpf:cCpf,
+                wpp:cWpp,
+                nasc:cNasc
+            },
+            contentType: false,
+            processData: false,
+            success: function(r){console.log(r)}
+        })
+        return false;
+    });
+    */
 
     //Salvar os dados num array
     tabela = document.getElementById("tabela")
@@ -155,4 +193,6 @@ $(document).ready(()=>{
         })
     });
 
+    //Deletar registros
+    
 });
