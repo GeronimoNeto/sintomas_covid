@@ -8,7 +8,6 @@ $(document).ready(()=>{
             }
         });
         var formData = new FormData(document.getElementById("salvarPaciente"))
-        formData.append(document.getElementById("nome"))
         $.ajax({
             url: "pacientes",
             contentType: false,
@@ -18,40 +17,69 @@ $(document).ready(()=>{
             type: "POST",
             data: formData,
             success:(msg)=>{
-                console.log("envio de formulario"+msg)
             }
         })
         return false;
     })
-    /*
-    $("#salvarPaciente").submit((e)=>{
+
+    $("#atenderPaciente").submit((e)=>{
         e.preventDefault()
         $.ajaxSetup({
-        headers: {
+            headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        var cNome = $("#nome").val()
-        var cCpf = $("#cpf").val()
-        var cWpp = $("#wpp").val()
-        var cNasc = $("#nasc").val()
+        var formData2 = new FormData(document.getElementById("atenderPaciente"))
         $.ajax({
-            url: "{{ route('pacientes.cadastrar') }}",
-            type: "post",
-            data: {
-                _token: $("#_token").val(),
-                nome:cNome,
-                cpf:cCpf,
-                wpp:cWpp,
-                nasc:cNasc
-            },
+            url: "atender",
             contentType: false,
+            cache: false,
             processData: false,
-            success: function(r){console.log(r)}
+            dataType: 'json',
+            type: "POST",
+            data: formData2,
+            success:(msg)=>{
+                br = $("#boxResultado")
+                successa = $("<div/>",{
+                    class: "alert alert-success alert-dismissible fade show",
+                    role: "alert",
+                    id: "meuAlertae",
+                    text: "Paciente Atendido!",
+                    style:"margin-top:10px"
+                }).appendTo(br)
+                $("<button/>",{
+                    class:"btn-close",
+                    data:"alert",
+                    id:"btndoalerta"
+                }).appendTo(successa)
+                $("#meuAlertae button").click(()=>{successa.hide()})
+            }
         })
         return false;
-    });
-    */
+    })
+
+
+    //editar registros
+    function editarRegistros(){
+        editArea = $("#editArea")
+        closeEditArea = $("#closeEditArea")
+        for (let ed = 0; ed < qtd; ed++) {
+            let editBtn = $("#edit"+ed)
+            let sId = $("#edit"+ed+" button").attr("id")
+            editBtn.click(()=>{
+                editArea.attr("style","display:flex")
+                $("#editarID").val($("#nome"+ed).attr("value"))
+                $("#editarNome").val($("#nome"+ed).html())
+                $("#editarIdade").val($("#idade"+ed).attr("value"))
+                $("#editarCPF").val($("#cpf"+ed).html())
+                $("#editarWPP").val($("#wpp"+ed).html())
+                
+                closeEditArea.click(()=>{
+                    editArea.attr("style","display:none")
+                })
+            })
+        }
+    }
 
     //Salvar os dados num array
     tabela = document.getElementById("tabela")
@@ -78,6 +106,7 @@ $(document).ready(()=>{
                 tabela.innerHTML+=element
             });
         }
+        editarRegistros()
     });
 
     //Data maxima no input date
@@ -122,6 +151,36 @@ $(document).ready(()=>{
         }
     })
 
+    //Formatar o CPF no Editar
+    $("#editarCPF").keydown((k)=>{
+        key = window.event.keyCode
+        if(key==8){document.querySelector("#editarCPF").value=""}
+        $("#editarCPF").attr("maxlength", "14")
+        icval = $("#editarCPF").val()
+        var v = icval
+        if(v.length == 3 || v.length == 7){
+            document.querySelector("#editarCPF").value += "."
+        }else if(v.length == 11){
+            document.querySelector("#editarCPF").value += "-"
+        }
+    })
+    //Formatar o WPP no Editar
+    $("#editarWPP").keydown((k)=>{
+        key = window.event.keyCode
+        if(key==8){document.querySelector("#editarWPP").value=""}
+        $("#editarWPP").attr("maxlength", "14")
+        icval = $("#editarWPP").val()
+        var v = icval
+        if(v.length == 0){
+            document.querySelector("#editarWPP").value += "("
+        }else if(v.length == 3){
+            document.querySelector("#editarWPP").value += ")"
+        }
+        else if(v.length == 9){
+            document.querySelector("#editarWPP").value += "-"
+        }
+    })
+
     //Alertas
     setTimeout(()=>{ //Fecha automaticamente após 5 segundos
         $("#meuAlerta").hide();
@@ -149,9 +208,9 @@ $(document).ready(()=>{
         "Diarréia"
     ]
     resultados = [
-        "<b style='color:red'>POSSÍVEL INFECTADO</b>",
-        "<b style='color:orange'>POTENCIAL INFECTADO</b>",
-        "<b style='color:green'>SINTOMAS INSUFICIENTES</b>"
+        "<b style='color:red'>❗POSSÍVEL INFECTADO</b>",
+        "<b style='color:orange'>⚠️POTENCIAL INFECTADO</b>",
+        "<b style='color:green'>✅SINTOMAS INSUFICIENTES</b>"
     ]
     let somaSintomas = 0
     sintomasPaciente = []
@@ -193,6 +252,7 @@ $(document).ready(()=>{
         })
     });
 
-    //Deletar registros
+    
+    editarRegistros()
     
 });

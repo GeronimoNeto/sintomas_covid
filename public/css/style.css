@@ -31,3 +31,16 @@
     background-color: transparent;
     cursor: pointer;
 }
+
+.editArea{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0px;
+    left:0px;
+    background-color: rgba(0,0,0,0.5);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display:none
+}

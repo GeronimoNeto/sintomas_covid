@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 30-Jun-2022 às 22:52
+-- Tempo de geração: 14-Jul-2022 às 00:31
 -- Versão do servidor: 10.4.24-MariaDB
 -- versão do PHP: 8.1.6
 
@@ -20,6 +20,38 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `covid`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `atendimentos`
+--
+
+CREATE TABLE `atendimentos` (
+  `id` int(11) NOT NULL,
+  `sintomas` int(11) NOT NULL,
+  `lista` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `resultado` tinyint(4) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `idPaciente` int(11) NOT NULL,
+  `_token` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Extraindo dados da tabela `atendimentos`
+--
+
+INSERT INTO `atendimentos` (`id`, `sintomas`, `lista`, `resultado`, `created_at`, `updated_at`, `idPaciente`, `_token`) VALUES
+(12, 7, 'Mal estar geral,Dificuldade de locomoção,Falta de paladar,Dificuldade de respirar,Dores no corpo,Dor de cabeça,Coriza,', 1, '2022-07-13 02:31:18', '2022-07-13 04:59:06', 11, '6WLAY74Fzshp7OIjjarpBM7See6mw7MrlmC59X69'),
+(13, 6, 'Dor de garganta,Mal estar geral,Dores no corpo,Cansaço,Coriza,Falta de olfato,', 1, '2022-07-13 03:23:04', '2022-07-13 03:23:04', 12, NULL),
+(14, 2, 'Falta de paladar,Dificuldade de respirar,', 2, '2022-07-13 04:33:19', '2022-07-13 04:33:23', 15, '6WLAY74Fzshp7OIjjarpBM7See6mw7MrlmC59X69'),
+(15, 2, 'Falta de paladar,Dor de cabeça,', 2, '2022-07-13 04:34:22', '2022-07-13 04:34:25', 17, '6WLAY74Fzshp7OIjjarpBM7See6mw7MrlmC59X69'),
+(16, 2, 'Dificuldade de respirar,Tosse,', 2, '2022-07-13 04:37:27', '2022-07-13 04:37:31', 21, '6WLAY74Fzshp7OIjjarpBM7See6mw7MrlmC59X69'),
+(17, 2, 'Mal estar geral,Dores no corpo,', 2, '2022-07-13 04:38:40', '2022-07-13 04:38:42', 19, '6WLAY74Fzshp7OIjjarpBM7See6mw7MrlmC59X69'),
+(18, 2, 'Dor de garganta,Mal estar geral,', 2, '2022-07-13 04:41:48', '2022-07-13 04:41:49', 18, '6WLAY74Fzshp7OIjjarpBM7See6mw7MrlmC59X69'),
+(19, 2, 'Dificuldade de respirar,Dor de cabeça,', 2, '2022-07-13 04:42:49', '2022-07-13 04:52:53', 14, '6WLAY74Fzshp7OIjjarpBM7See6mw7MrlmC59X69'),
+(20, 6, 'Dores no corpo,Tosse,Nariz entupido,Coriza,Dificuldade de respirar,Dor de garganta,', 1, '2022-07-13 04:54:21', '2022-07-13 04:54:21', 20, NULL);
 
 -- --------------------------------------------------------
 
@@ -73,34 +105,26 @@ CREATE TABLE `pacientes` (
   `wpp` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
   `foto` varchar(17) COLLATE utf8mb4_unicode_ci DEFAULT 'none.jpg',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `estado` tinyint(4) NOT NULL,
+  `_token` text COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Extraindo dados da tabela `pacientes`
 --
 
-INSERT INTO `pacientes` (`id`, `nome`, `nasc`, `cpf`, `wpp`, `foto`, `created_at`, `updated_at`) VALUES
-(1, 'José da Silva', '1980-06-07', '12345678910', '85991445755', 'none.jpg', '2022-06-30 15:00:43', '2022-06-30 15:00:58'),
-(2, 'Carlos Magnus', '1870-06-15', '00000000020', '85992446788', 'none.jpg', '2022-06-30 15:00:43', '2022-06-30 15:00:58'),
-(3, 'Maria Antonieta Sales', '2003-09-29', '10020030050', '11952278940', 'none.jpg', '2022-06-30 15:00:43', '2022-06-30 15:00:58'),
-(4, 'Edinaldo Pereira', '1920-10-10', '50077788899', '11924024029', 'none.jpg', '2022-06-30 18:17:58', '2022-06-30 18:17:58'),
-(5, 'Gabriel Lima', '2000-09-09', '93294239493', '92348239429', 'none.jpg', '2022-06-30 18:38:45', '2022-06-30 18:38:45'),
-(6, 'Coliseu Dias', '2000-10-10', '34234234234', '93294923482', 'none.jpg', '2022-06-30 18:41:54', '2022-06-30 18:41:54'),
-(7, 'Cafuné de Goiaba', '1988-04-23', '99999999999', '99999999999', 'none.jpg', '2022-06-30 18:43:10', '2022-06-30 18:43:10'),
-(8, 'Codorna Doce', '2012-12-12', '22222222222', '22222222222', 'none.jpg', '2022-06-30 18:44:09', '2022-06-30 18:44:09'),
-(9, 'Raimundo Barba', '1975-10-10', '92934923848', '48953899490', 'none.jpg', '2022-06-30 19:08:06', '2022-06-30 19:08:06'),
-(10, 'Thiago Neves', '1978-05-08', '29834823848', '93582348529', 'none.jpg', '2022-06-30 19:09:13', '2022-06-30 19:09:13'),
-(11, 'Carlos Doido', '2003-04-23', '98884848384', '48384893483', 'none.jpg', '2022-06-30 19:17:16', '2022-06-30 19:17:16'),
-(12, 'Batman Rapido', '2010-10-29', '92349293492', '23849234923', '62be04774a20c.jpg', '2022-06-30 20:15:51', '2022-06-30 20:15:51'),
-(13, 'Eren Nordestino', '1940-08-18', '93249239432', '95492345934', 'none.jpg', '2022-06-30 20:16:26', '2022-06-30 20:16:26'),
-(14, 'nome sobre', '1900-10-10', '93492349324', '93402304239', '62be0548b6f1a.jpg', '2022-06-30 20:19:20', '2022-06-30 20:19:20'),
-(15, 'Alves Dias', '2000-02-20', '39429349324', '93249324092', '62be07bf5142a.jpg', '2022-06-30 20:29:51', '2022-06-30 20:29:51'),
-(16, 'Luffy Borracha', '2000-10-10', '29103203120', '93240234923', 'none.jpg', '2022-06-30 20:30:32', '2022-06-30 20:30:32'),
-(17, 'Camila Salgado', '1980-10-10', '93949324923', '34239423894', '62be08f8a22ad.jpg', '2022-06-30 20:35:04', '2022-06-30 20:35:04'),
-(18, 'Almeida Silva', '1901-12-02', '94239492349', '32492394239', 'none.jpg', '2022-06-30 20:35:35', '2022-06-30 20:35:35'),
-(19, 'Victor Hugo', '2009-09-09', '94230949234', '39409239423', '62be09bcae2bf.png', '2022-06-30 20:38:20', '2022-06-30 20:38:20'),
-(20, 'Charles Oliveira', '2012-12-28', '39423402390', '39203402390', 'none.jpg', '2022-06-30 20:39:23', '2022-06-30 20:39:23');
+INSERT INTO `pacientes` (`id`, `nome`, `nasc`, `cpf`, `wpp`, `foto`, `created_at`, `updated_at`, `estado`, `_token`) VALUES
+(7, 'Cafuné de Goiaba', '1988-04-23', '99999999999', '99999999999', 'none.jpg', '2022-06-30 18:43:10', '2022-06-30 18:43:10', 0, NULL),
+(11, 'Carlos Eduardo', '1980-04-23', '98884848384', '48384893483', 'none.jpg', '2022-06-30 19:17:16', '2022-07-13 22:31:17', 1, NULL),
+(12, 'Batman Rapido', '2010-10-29', '92349293492', '23849234923', '62be04774a20c.jpg', '2022-06-30 20:15:51', '2022-06-30 20:15:51', 3, NULL),
+(13, 'Eren Nordestino', '1940-08-18', '93249239432', '95492345934', 'none.jpg', '2022-06-30 20:16:26', '2022-06-30 20:16:26', 3, NULL),
+(14, 'nome sobre', '1900-10-10', '93492349324', '93402304239', '62be0548b6f1a.jpg', '2022-06-30 20:19:20', '2022-07-13 04:52:53', 2, NULL),
+(15, 'Alves Dias', '2000-02-20', '39429349324', '93249324092', '62be07bf5142a.jpg', '2022-06-30 20:29:51', '2022-06-30 20:29:51', 0, NULL),
+(17, 'Camila Salgado', '1980-10-10', '93949324923', '34239423894', '62be08f8a22ad.jpg', '2022-06-30 20:35:04', '2022-06-30 20:35:04', 0, NULL),
+(19, 'Victor Hugo', '2009-09-09', '94230949234', '39409239423', '62be09bcae2bf.png', '2022-06-30 20:38:20', '2022-06-30 20:38:20', 0, NULL),
+(20, 'Charles Oliveira', '2012-12-28', '39423402390', '39203402390', 'none.jpg', '2022-06-30 20:39:23', '2022-07-13 04:54:21', 1, NULL),
+(21, 'Paciente Doente', '1999-08-23', '23949239410', '29239239293', 'none.jpg', '2022-07-04 21:11:29', '2022-07-04 21:11:29', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -154,6 +178,12 @@ CREATE TABLE `users` (
 --
 
 --
+-- Índices para tabela `atendimentos`
+--
+ALTER TABLE `atendimentos`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Índices para tabela `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -198,6 +228,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT de tabela `atendimentos`
+--
+ALTER TABLE `atendimentos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
 -- AUTO_INCREMENT de tabela `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -213,7 +249,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de tabela `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de tabela `personal_access_tokens`

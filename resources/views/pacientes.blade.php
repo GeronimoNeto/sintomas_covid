@@ -44,6 +44,7 @@
                         <th>Idade</th>
                         <th>CPF</th>
                         <th>Contato</th>
+                        <th>Estado</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -57,7 +58,7 @@
                         return preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/", "\$1.\$2.\$3/\$4-\$5", $cpf);
                     }
                     @endphp
-                    @foreach($pacientes as $paciente)
+                    @foreach($pacientes as $k=>$paciente)
                     <tr>
                         <th><a href="/img/pacientes/{{$paciente->foto}}"><img style="background-image:url(/img/pacientes/{{$paciente->foto}})" class="imagemPaciente"></a></th>
                         @php
@@ -78,15 +79,27 @@
                             }
 
                             $num = $paciente->wpp;
-                            $wpp = '('.substr($num,0,2).')'.substr($num,2,5).'-'.substr($num,7); 
+                            $wpp = '('.substr($num,0,2).')'.substr($num,2,5).'-'.substr($num,7);
+                            
+                            $resultados = [
+                                "❗Possível Infectado",
+                                "⚠️Potencial Infectado",
+                                "✅Sintomas Insuficientes",
+                                "Não Atendido"
+                            ];
+                            $corRR = ["red","orange","green","grey"];
+                            
+
+
                         @endphp
-                        <th>{{$paciente->nome}}</th>
-                        <th>{{$idade}}</th>
-                        <th>{{formatCPF($paciente->cpf)}}</th>
-                        <th>{{$wpp}}</th>
+                        <th id="nome{{$k}}" value="{{$paciente->id}}">{{$paciente->nome}}</th>
+                        <th id="idade{{$k}}" value="{{$paciente->nasc}}">{{$idade}}</th>
+                        <th id="cpf{{$k}}">{{formatCPF($paciente->cpf)}}</th>
+                        <th id="wpp{{$k}}">{{$wpp}}</th>
+                        <th style="text-align:center;color:{{$corRR[$paciente->estado]}}">{{$resultados[$paciente->estado]}}</th>
                         <th>
                             <a href="/painel/pacientes/atender/{{$paciente->id}}"><button type="submit" class="btn btn-success w-100" name="atender">Atender</button></a>
-                            <a href="/painel/pacientes/editar/{{$paciente->id}}"><button type="submit" class="btn btn-warning w-100" name="atender">Editar</button></a>
+                            <a id="edit{{$k}}"><button id="{{$paciente->id}}" type="submit" class="btn btn-warning w-100" name="atender">Editar</button></a>
                             <a href="/painel/pacientes/remover/{{$paciente->id}}"><button type="submit" class="btn btn-danger w-100" name="atender">Remover</button></a>
                         </th>
                     </tr>
@@ -94,5 +107,40 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div id="editArea" class="editArea">
+        <form class="row g-3" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-dialog" role="document">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="modal-header border-bottom-0">
+                        <h5 class="modal-title">Editar Paciente</h5>
+                        <button type="button" id="closeEditArea" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-0">
+                        <input type="hidden" name="id" id="editarID">
+                        <div>
+                            <i style="margin-left:3px;" >Nome Completo</i>
+                            <input type="text" placeholder="" name="nome" id="editarNome" class="form-control" required="">
+                            <i style="margin-left:3px;">CPF</i>
+                            <input type="text" placeholder="000.000.000-00" class="form-control" name="cpf" id="editarCPF" pattern="[0-9.-]+$" required="">
+                            <div>
+                                <i style="margin-left:3px;">Contato</i>
+                                <input type="text" placeholder="(00)90000-0000" name="wpp" class="form-control" id="editarWPP" pattern="[0-9-()]+$" required="">
+                            </div>
+                            <i style="margin-left:3px;">Data de Nascimento</i>
+                            <input type="date" class="form-control" name="nasc" id="editarIdade" required="" min="1900-01-01" max="2021-07-13">
+                            <div class="mb-3">
+                                <i for="formFile" class="form-label">Foto do Paciente (opcional)</i>
+                                <input class="form-control" type="file" name="foto" id="formFile">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer flex-column border-top-0">
+                        <input type="submit" class="btn btn-lg btn-primary w-100 mx-0 mb-2" value="Salvar Alterações">
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 @endsection
