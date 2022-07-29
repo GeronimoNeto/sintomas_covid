@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pacientes;
 use App\Models\Atendimentos;
-
+use Illuminate\Support\Facades\DB;
 use \LaravelLegends\PtBrValidator\Rules\FormatoCpf;
 
 class Eventos extends Controller
@@ -13,12 +13,7 @@ class Eventos extends Controller
     public function index(){
         $pacientes = Pacientes::all();
         
-
-        return view('painel',
-            [
-                "pacientes" => $pacientes
-            ]
-        );
+        return redirect('/painel');
     }
 
     public function pacientes(){
@@ -32,20 +27,23 @@ class Eventos extends Controller
     }
 
     public function salvar(Request $r){
-        $event = new Pacientes;
+        //return redirect('/painel/pacientes/novo');
         
+        $event = new Pacientes;
+        $cpf = str_replace(".","",str_replace("-","",$r->cpf));
+
         $event->nome = $r->nome;
-        $event->cpf = str_replace(".","",str_replace("-","",$r->cpf));
+        $event->cpf = $cpf;
         $event->wpp = str_replace(")","",str_replace("(","",str_replace("-","",$r->wpp)));
         $event->nasc = $r->nasc;
         $event->estado = 3;
         
         if($r->hasFile("foto") && $r->file("foto")->isValid()){
-            $permitidas = ["jpg","jpeg","png"];
+            $permitidas = ["jpg","png"];
             $foto = $r->foto;
             $extensao = $foto->extension();
             if(in_array($extensao,$permitidas)){
-                $nomeFoto = uniqid().".$extensao";
+                $nomeFoto = $cpf.".$extensao";
                 $foto->move(public_path("img/pacientes"),$nomeFoto);
                 $event->foto = $nomeFoto;
             }else{
@@ -54,9 +52,9 @@ class Eventos extends Controller
         }
         
         $event->save();
-        
-        return response()->json(['Paciente Registrado']);
-        //return redirect('/painel/pacientes')->with('alert','Paciente Registrado!');
+
+        $select = $event->select('id','nome','nasc','cpf','wpp','foto','estado')->where('cpf',$cpf)->get();
+        return response()->json($select);
     }
     public function editar(Request $r){
         $event = new Pacientes;
@@ -75,7 +73,7 @@ class Eventos extends Controller
             $foto = $r->foto;
             $extensao = $foto->extension();
             if(in_array($extensao,$permitidas)){
-                $nomeFoto = uniqid().".$extensao";
+                $nomeFoto = $cpf.".$extensao";
                 $foto->move(public_path("img/pacientes"),$nomeFoto);
             }else{
                 return redirect('/painel/pacientes')->with('alert2','Formato de Imagem Não Permitido!');
@@ -91,7 +89,7 @@ class Eventos extends Controller
         ]);
 
         //return response()->json(['Paciente Editado']);
-        return redirect("/painel/pacientes/")->with('alert5','Paciente Editado!');
+        return redirect("/painel/pacientes")->with('alert5','Paciente Editado!');
     }
 
     public function atender($id){

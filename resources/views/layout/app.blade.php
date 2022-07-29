@@ -37,6 +37,11 @@
         Paciente Removido!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    @elseif(session('alert5'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id="meuAlerta">
+        Paciente Editado!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     @endif
     @yield('content')
     <footer>

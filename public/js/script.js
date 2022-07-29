@@ -1,26 +1,4 @@
 $(document).ready(()=>{
-    
-    $("#salvarPaciente").submit((e)=>{
-        e.preventDefault()
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        var formData = new FormData(document.getElementById("salvarPaciente"))
-        $.ajax({
-            url: "pacientes",
-            contentType: false,
-            cache: false,
-            processData: false,
-            dataType: 'json',
-            type: "POST",
-            data: formData,
-            success:(msg)=>{
-            }
-        })
-        return false;
-    })
 
     $("#atenderPaciente").submit((e)=>{
         e.preventDefault()
@@ -61,6 +39,7 @@ $(document).ready(()=>{
 
     //editar registros
     function editarRegistros(){
+        let qtd = document.querySelectorAll("#tabela tr").length
         editArea = $("#editArea")
         closeEditArea = $("#closeEditArea")
         for (let ed = 0; ed < qtd; ed++) {
@@ -83,13 +62,21 @@ $(document).ready(()=>{
 
     //Salvar os dados num array
     tabela = document.getElementById("tabela")
-    qtd = document.querySelectorAll("#tabela tr").length
+    let qtd = document.querySelectorAll("#tabela tr").length
     array = []
-    for(let i=0;i<qtd;i++){
-        item = tabela.children[i].innerHTML
+    function criarDados(){
+        let qtd = document.querySelectorAll("#tabela tr").length
+        for(let i=0;i<qtd;i++){
+            item = tabela.children[i].innerHTML
+            array.push(item)
+        }
+    }
+    criarDados()
+    function salvarDados(){
+        let qtd = document.querySelectorAll("#tabela tr").length
+        item = tabela.children[qtd-1].innerHTML
         array.push(item)
     }
-    
     //Pesquisar pessoas por meio dos dados inseridos no campo de pesquisa
     pesquisar = document.getElementById("pesquisar")
     $(pesquisar).keyup(()=>{
@@ -210,7 +197,8 @@ $(document).ready(()=>{
     resultados = [
         "<b style='color:red'>❗POSSÍVEL INFECTADO</b>",
         "<b style='color:orange'>⚠️POTENCIAL INFECTADO</b>",
-        "<b style='color:green'>✅SINTOMAS INSUFICIENTES</b>"
+        "<b style='color:green'>✅SINTOMAS INSUFICIENTES</b>",
+        "<b style='color:grey'>Não Atendido</b>"
     ]
     let somaSintomas = 0
     sintomasPaciente = []
@@ -252,7 +240,49 @@ $(document).ready(()=>{
         })
     });
 
-    
     editarRegistros()
-    
+
+    $("#salvarPaciente").submit((e)=>{
+        e.preventDefault()
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        var formData = new FormData(document.getElementById("salvarPaciente"))
+        $.ajax({
+            url: "pacientes",
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'json',
+            type: "POST",
+            data: formData,
+            success: (select)=>{
+                newAno = (select[0].nasc)
+                newIdade = 2022-newAno.substring(4,0)
+
+                let novo = `<tr>
+                    <th><a href="/img/pacientes/${select[0].foto}"><img style="background-image:url(/img/pacientes/${select[0].foto})" class="imagemPaciente"></a></th>
+                    <th id="nome${qtd}" value="${select[0].id}">${select[0].nome}</th>
+                    <th id="idade${qtd}" value="${select[0].nac}">${newIdade}</th>
+                    <th id="cpf${qtd}">${$("#inputCPF").val()}</th>
+                    <th id="wpp${qtd}">${$("#inputWPP").val()}</th>
+                    <th style="text-align:center;">${resultados[select[0].estado]}</th>
+                    <th>
+                        <a href="/painel/pacientes/atender/${select[0].id}"><button type="submit" class="btn btn-success w-100" name="atender">Atender</button></a>
+                        <a id="edit${qtd}"><button id="${select[0].id}" type="submit" class="btn btn-warning w-100" name="atender">Editar</button></a>
+                        <a href="/painel/pacientes/remover/${select[0].id}"><button type="submit" class="btn btn-danger w-100" name="atender">Remover</button></a>
+                    </th>
+                </tr>`
+                $("#tabela").append(novo)
+                $('#salvarPaciente input').val("")
+                $('#salvarPaciente input[type = submit]').val("Enviar")
+                salvarDados()
+                editarRegistros()
+            }
+        })
+
+        return false;
+    })
 });

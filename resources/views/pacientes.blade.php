@@ -6,7 +6,7 @@
         <ul class="nav nav-pills">
             <il class="nav-item"><a class="nav-link" href="/painel">Painel</a></il>
             <il class="nav-item"><a class="nav-link active">Pacientes</a></il>
-            <il class="nav-item"><a class="nav-link" href="/painel/atendimentos">Atendimentos</a></il>
+            <il class="nav-item"><a class="nav-link">Atendimentos</a></il>
         </ul>
     </header>
     <div class="pacientes"><br>
@@ -30,7 +30,6 @@
                         <input class="form-control" type="file" name="foto" id="formFile">
                     </div>
                 </div>
-                <input id="signup-token" name="_token" type="hidden" value="{{csrf_token()}}">
                 <input type="submit" class="btn btn-primary" id="envipaci">
             </form>
         </div>
@@ -88,8 +87,6 @@
                                 "Não Atendido"
                             ];
                             $corRR = ["red","orange","green","grey"];
-                            
-
 
                         @endphp
                         <th id="nome{{$k}}" value="{{$paciente->id}}">{{$paciente->nome}}</th>
@@ -109,7 +106,7 @@
         </div>
     </div>
     <div id="editArea" class="editArea">
-        <form class="row g-3" method="post" enctype="multipart/form-data">
+        <form action="/painel/pacientes/editar" class="row g-3" method="get" enctype="multipart/form-data">
             @csrf
             <div class="modal-dialog" role="document">
                 <div class="modal-content rounded-4 shadow">
